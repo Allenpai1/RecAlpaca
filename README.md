@@ -88,6 +88,15 @@ For the fine-tuning of the Alpaca-7B model, we utilize the following set of hype
 | CHAT-REC(text-davinci-002) | 0.3031  | 0.1204 |0.3692|
 | RecAlpaca | **0.3337**        | **0.1770**         |0.3708|
 
+## Prompts Analysis
+
+With this experiments, our objective was to decrease the sizes of input prompts through the random drop user-interactd items and candidate set. We conducted tests ranging from retaining only 10% of these items up to 100%. The reuslts is illustrated as below:
+
+ ![plot](./imgs/eva2.png) 
+
+the figure shows that as we progressively reduce the inclusion of user-intercated item histories, we observed a corresponding decrese in the information avaliable about the user. This led to a less clear understanding of the user's preferences, subsequently exerting a notable impact on the recommendation abilities, by evaluated on top 5 NDCG, precision, and recall scores.
+
+
 ## RecAlpaca vs Alpaca-7B
 
 ### On recommendation task:
