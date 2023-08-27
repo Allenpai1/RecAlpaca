@@ -47,14 +47,8 @@ The file [`ML100kEvaluationRecAlpaca.json`](./testSet/ML100kEvaluationRecAlpaca.
 - In order to teach RecAlpaca to understand user preferences and profiles, as well as select the most relevant items from the candidate set, we employed two lightGCN networks. These networks were trained using [MovieLens-1m](https://grouplens.org/datasets/movielens/1m/) and [MovieLens-100k datasets](https://grouplens.org/datasets/movielens/100k/), leading to the generation of candidate sets and the top1 recommendation for each user. This process in turn produced more comprehensive instruction datasets with detailed information.
 
 The statistical information of our dataset can be find in following figures:
-<div>
-  <img src="./imgs/pie.jpg" alt="Large Image" width="400px" style="float: left; margin-right: 20px;">
-  <div style="float: right; width: calc(100% - 420px);">
-    <img src="./imgs/inst.png" alt="Small Image 1" width="250px" style="margin-bottom: 10px;">
-    <img src="./imgs/input.png" alt="Small Image 2" width="250px" style="margin-bottom: 10px;">
-    <img src="./imgs/output.png" alt="Small Image 3" width="250px">
-  </div>
-</div>
+
+ ![plot](./imgs/analysis.jpg) 
 
 where the left pie chat illustrates the 6 most verbs found in the generated instructions. On the right, sub-figures depict the distributions of generated instructions, their correspoding inputs, and outputs.
 
