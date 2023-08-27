@@ -22,9 +22,6 @@ The RecAlpaca model is a result of fine-tuning a 7B Alpaca model [1] using a dat
 
 The file [`rec_combined_data.json`](./trainingSet/rec_combined_data.json) is a dataset containing 13k instances of instruction-following data used for fine-tuning the RecAlpaca model. This JSON file is structured as a list of dictionaries, where each dictionary contains the following information:
 
-
-The file [`rec_combined_data.json`](./trainingSet/rec_combined_data.json) is a dataset containing 13k instances of instruction-following data used for fine-tuning the RecAlpaca model. This JSON file is structured as a list of dictionaries, where each dictionary contains the following information:
-
 - `instruction`: A string describing the recommendation tasks and their respective domains.
 - `input`: A string representing the input, which can either be the highly rated items of the user or a combination of the user's profile and items they like & dislike.
 - `output`: A string indicating the generated recommendation items and the reasons for those recommendations. This output is generated using the `gpt3.5-turbo`.
