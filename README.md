@@ -77,7 +77,7 @@ For the fine-tuning of the Alpaca-7B model, we utilize the following set of hype
 | Lora dropout | 0.05  |
  | Lora Target Modules | [q_proj, k_proj, v_proj, o_proj]  |
 
- ## RecAlpaca vs GPT3.5, LightGCN and LightFM
+ ## Results: RecAlpaca vs GPT3.5, LightGCN and LightFM
  
 In comparing our approach with other methods, we have considered classical recommendation models and the [CHAT-REC](https://arxiv.org/abs/2303.14524) model proposed by Gao et al. Our evaluation involves the RecAlpaca model with top $5$ recommendations. It is evident from the results that RecAlpaca outperforms all classical recommendation systems as well as [CHAT-REC (gpt-3.5-turbo)](https://arxiv.org/abs/2303.14524). While the NDCG score is slightly lower than that of [CHAT-REC (text-davinci-003)](https://arxiv.org/abs/2303.14524), the precision and recall metrics of RecAlpaca exhibit notable improvements, specifically a precision increase of approximately 2.994% and a recall increase of approximately 26.068%.
 
@@ -90,7 +90,7 @@ In comparing our approach with other methods, we have considered classical recom
 | CHAT-REC(text-davinci-002) | 0.3031  | 0.1204 |0.3692|
 | RecAlpaca | **0.3337**        | **0.1770**         |0.3708|
 
-## Prompts Analysis
+## Analysis 1: Prompts Analysis
 
 With this experiments, our objective was to decrease the sizes of input prompts through the random drop user-interactd items and candidate set. We conducted tests ranging from retaining only 10% of these items up to 100%. The reuslts is illustrated as below:
 
@@ -99,7 +99,7 @@ With this experiments, our objective was to decrease the sizes of input prompts 
 the figure shows that as we progressively reduce the inclusion of user-intercated item histories, we observed a corresponding decrese in the information avaliable about the user. This led to a less clear understanding of the user's preferences, subsequently exerting a notable impact on the recommendation abilities, by evaluated on top 5 NDCG, precision, and recall scores.
 
 
-## RecAlpaca vs Alpaca-7B
+## Analysis 2: RecAlpaca vs Alpaca-7B
 
 ### On recommendation task:
 
