@@ -1,0 +1,13 @@
+accelerate               0.20.3
+appdirs                  1.4.4
+bitsandbytes             0.37.2
+black                    23.3.0
+datasets                 2.13.1
+fire                     0.5.0
+gradio                   3.35.2
+gradio_client            0.2.7
+loralib                  0.1.1
+peft                     0.3.0.dev0
+sentencepiece            0.1.99
+transformers             4.32.0.dev0
+wandb                    0.15.4

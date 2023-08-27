@@ -1,68 +1,117 @@
-# CASA0018 Project - Image Open Domain QA system via GPT3 API, Cameras and Raspberry Pi 4B
-
-### CASA0018 Project - Image Open Domain QA system via GPT3 API, Cameras and Raspberry Pi 4B
-
-### The detailed project description can be find in [my report](./report/report.md).
+# Beyond GPT-3.5 in Conversational Recommendation Systems: Introducing RecAlpaca, a Fine-tuned Model based on Alpaca-7B
 
 <br />
 
-> The system can be trained on PyTorch and TensorFlow, and for both platforms, the source code of Faster-RCNN are included.  Some issues remained unsolved during the experiment on my M1 macs with [TensorFlow object detection environments](https://github.com/tensorflow/io/issues/1625), so PyTorch was used for the primary results production.
+This is the project code which aim to build a dedicated instruction following dataset that not only facilitates the fine-tuning of a language model for explainable recommendations but also a strong recommendation capabilities.
 
-## System Overview
+This repo contains:
+- The code to [`generate the data.`](./dataGeneration/)
+- The code to [`fine-tuning Alpaca-7B.`](./alpacaLoraTrain.py)
+- The code to [`evaluate Alpaca-7B.`](./evaluation_test.py)
+- The code of our [`evaluation results.`](./testEvalTop1.ipynb)
 
-For this project, I have build a multilingual language (Chinese and English) image-to-text open domain QA system with the [ChatGPT-API](https://openai.com/blog/introducing-chatgpt-and-whisper-apis) and [Paddle OCR](https://github.com/PaddlePaddle/PaddleOCR). The system consists of 3 steps:
- 1. Language and text detection: a detection model Faster-RCNN is used to recognize the text from the image and language of that text(Chinese or English) and crop the text from the original image with the language classification results passed into downstream tasks;
- 2. Convert zoomed image to text: the previous step results are passed into paddleOCR, and the corresponding language text recognition model is loaded to extract the text from zoomed text image;
- 3. QA system: ChatGPT API is used to pass the detected text and return a detailed answer, saved as PDF format and JPG images.
+## Overview
 
-![plot](./Images/system2.png)
+The RecAlpaca model is a result of fine-tuning a 7B Alpaca model [1] using a dataset consisting of 13k examples of instruction recommendations. These recommendations were generated following the approach described in a research paper referred to as Self-Instruct [2]. The weights of RecAlpaca can be found in HuggingFace Hub with [model card](https://huggingface.co/Allenpai/AlpacaLoraRec).
 
-I tried the handwritten text recognition models on the open-source library KerasOCR; it turns out that the KeraOCR cannot recognize handwritten text, and only English language recognition models are supported. This is because KerasOCR is primarily designed to recognize printed text. 
+[1]: Alpaca: Stanford Alpaca: An Instruction-following LLaMA model. Rohan Taori and Ishaan Gulrajani and Tianyi Zhang and Yann Dubois and Xuechen Li and Carlos Guestrin and Percy Liang and Tatsunori B. Hashimoto. https://github.com/tatsu-lab/stanford_alpaca
 
-Therefore to allow muti-language handwritten text detections, I have trained two-stage object detection Faster-RCNN models to detect Chinese or English handwriting questions text from images. The dataset constructed by myself contains my handwritten text from ChatGPT history questions. The detected text image is cropped, and the language classification results pass into PaddleOCR to load the crossposting text extraction model. After that, the detected texts are used as input to pass into the ChatGPT model through an API connection to return an answer. The program will output intermediate step results and save the final Question&Answer to a pdf file. 
+[2]: Self-Instruct: Aligning Language Model with Self Generated Instructions. Yizhong Wang, Yeganeh Kordi, Swaroop Mishra, Alisa Liu, Noah A. Smith, Daniel Khashabi, Hannaneh Hajishirzi. https://arxiv.org/abs/2212.10560
+
+## Data Release
+
+The file [`rec_combined_data.json`](./trainingSet/rec_combined_data.json) is a dataset containing 13k instances of instruction-following data used for fine-tuning the RecAlpaca model. This JSON file is structured as a list of dictionaries, where each dictionary contains the following information:
+
+
+The file [`rec_combined_data.json`](./trainingSet/rec_combined_data.json) is a dataset containing 13k instances of instruction-following data used for fine-tuning the RecAlpaca model. This JSON file is structured as a list of dictionaries, where each dictionary contains the following information:
+
+- `instruction`: A string describing the recommendation tasks and their respective domains.
+- `input`: A string representing the input, which can either be the highly rated items of the user or a combination of the user's profile and items they like & dislike.
+- `output`: A string indicating the generated recommendation items and the reasons for those recommendations. This output is generated using the `gpt3.5-turbo`.
+
+The file [`ML100kEvaluationRecAlpaca.json`](./testSet/ML100kEvaluationRecAlpaca.json) serves as a test set and includes 200 samples that have been randomly selected from the [MovieLens-100k](https://grouplens.org/datasets/movielens/100k/) Dataset. These samples are structured similarly to what was previously described. However, they contain additional information:
+
+- `testGT`: testset ground truth which comprises a randomly selected 20% of movies that the user truly enjoyed and preferred.
+- `output`: consists of the recommendation results produced by the RecAlpaca model, excluding the top1 recommended movie in the input prompt.
+- `wTop1Input`: contains input prompts alongside the top1 recommended movie.
+-  `output2`:  holds the recommendation outcomes from the RecAlpaca model, including the top1 recommended movie from the input prompts.
+
+## Data Generation Notes
+
+- We used `gpt3.5-turbo` to generate the instruction data instead of `text-davinci-003` primarily to keep costs lower.
+
+- We take each user's infomration on real datasets [MovieLens](https://grouplens.org/datasets/movielens/), [Book-Crossing](http://www2.informatik.uni-freiburg.de/~cziegler/BX/) and [Anime](https://www.kaggle.com/datasets/CooperUnion/anime-recommendations-database) to generate our input prompts. 
+
+- We utilized the `gpt3.5-turbo` model to generate output prompts, which encompass recommendation explanations and item descriptions. This was achieved by supplying the test set as a prompt, ensuring that the GPT model's responses are not generated randomly but aligned with the input context.
+
+- In order to teach RecAlpaca to understand user preferences and profiles, as well as select the most relevant items from the candidate set, we employed two lightGCN networks. These networks were trained using [MovieLens-1m](https://grouplens.org/datasets/movielens/1m/) and [MovieLens-100k datasets](https://grouplens.org/datasets/movielens/100k/), leading to the generation of candidate sets and the top1 recommendation for each user. This process in turn produced more comprehensive instruction datasets with detailed information.
+
+The statistical information of our dataset can be find in following figures:
+<div>
+  <img src="./imgs/pie.jpg" alt="Large Image" width="400px" style="float: left; margin-right: 20px;">
+  <div style="float: right; width: calc(100% - 420px);">
+    <img src="./imgs/inst.png" alt="Small Image 1" width="250px" style="margin-bottom: 10px;">
+    <img src="./imgs/input.png" alt="Small Image 2" width="250px" style="margin-bottom: 10px;">
+    <img src="./imgs/output.png" alt="Small Image 3" width="250px">
+  </div>
+</div>
+
+where the left pie chat illustrates the 6 most verbs found in the generated instructions. On the right, sub-figures depict the distributions of generated instructions, their correspoding inputs, and outputs.
+
+<p>&nbsp;</p> 
 
 ## Experiments Environments
  - OS: Intel(R) Core(TM) i5-8259U@230 GHz Macbook pro 2020
- - Raspberry Pi 4B 4GB OS(64-bit)
- - Platform: Python 3.10.8, pytorch 1.13.1, tensorflow 2.11.1, paddleocr 2.6.1.0, openai 0.27.2, OpenCV 4.5.5
- - GPU:A100-SXM4-80GB hired on [AutoDL](https://www.autodl.com/home)
- - IPhone with [IP Camera](https://github.com/shenyaocn/IP-Camera-Bridge) App
+ - GPU:NVIDIA GeForce RTX 3090 with 24GB RAM
 
-## Camera connection and data creation
- - For ground truth object bounding box creation, I have used [labelImg](https://github.com/heartexlabs/labelImg).
- - To connect the iPhone camera to the laptop [IP camera](https://github.com/shenyaocn/IP-Camera-Bridge) was used.
- 
 ## Install requirements
  - ```pip install -r requirements.txt```
- - The pretrained restnet50 backbone model on [VOC dataset](http://host.robots.ox.ac.uk/pascal/VOC/voc2007/) can be donwload on [google drive](https://drive.google.com/drive/folders/1bBdFgyOmAyaZJotF_79pKl8VIXhYggee?usp=sharing) and include in Pytorch\ train\ F-RCNN/model_data for training.
- - The full dataset can be download on [Own dataset](https://drive.google.com/drive/folders/1d7Cq-iJxVMWsWlyYrQ-pGN5UGvLxXnRg?usp=sharing).
 
-## My Faster-RCNN Detection training Results
-Many experiments are done on the model experiments; please see [my report](./report/report.md) for more details. I have listed the most interesting ones, where the model trained from scratch is slightly less performed and take long training times than with the backbone resnet50 pre-trained model loaded. The best model achieves a 90.02% AmAP. (Also, try not to train a deep model on the CPU).
-![plot](./report/compare.png)
+## Fine-tuned
+We perform the fine-tuning process for our models using the standard training code provided by Hugging Face. During this process, the model is optimized exclusively based on the output generations it produces.
 
-## Usage and run
-The code under the folder System code is already defined and ready to use, where the main.py is the system connected with the camera and QA_results.pdf is the returning pdf results; it will get updated once you run.
+For the fine-tuning of the Alpaca-7B model, we utilize the following set of hyperparameters:
 
-To run the program you can download my pretrained model on [google drive](https://drive.google.com/drive/folders/1bBdFgyOmAyaZJotF_79pKl8VIXhYggee?usp=sharing) and put it in System\ code/logs folder and in the main.py program you need to generate a personal [ChatGPT-API key](https://openai.com/blog/introducing-chatgpt-and-whisper-apis) :
-```
- cd System\ code/
- python main.py
-```
-When the camera is launched, press the ```space``` keyword to take the photo and ```q``` to quit the system.
-The system will return the intermediate results, the results will be similar as following:
- 1. For Faster-RCNN text language detection:
- 
- ![plot](./Images/combine.png)
+| Hyperparameter | Alpaca-7B | 
+|----------------|----------|
+| Batch size     | 32     | 
+| Learning rate  | 1e-4     |
+| Epochs         | 3        | 
+| Micro Batch Size    | 8     | 
+| Lora r  | 16     | 
+| Lora alpha | 16     | 
+| Lora dropout | 0.05  |
+ | Lora Target Modules | [q_proj, k_proj, v_proj, o_proj]  |
 
- 2. PaddleOCR text extraction results:
- ![plot](./Images/paddleChinese.png)
- ![plot](./Images/paddleEnglish.png)
+ ## RecAlpaca vs GPT3.5, LightGCN and LightFM
 
- 3. QA results in PDF:
- ![plot](./Images/ChineseDoc.png)
- ![plot](./Images/EnglishDoc.png)
+| Models | precision@5 | recall@5 | NDCG@5 |
+|----------------|----------|-----------|-----------| 
+| LightFM    | 0.2823      | 0.1410 | 0.2846 |
+| LightGCN  | 0.3030 | 0.1455 | 0.3425 |
+| CHAT-REC(gpt3.5-turbo) | 0.3103| 0.1279 | 0.3696 |
+| CHAT-REC(text-davinci-003) | 0.3240     | 0.1404 | **0.3802**|
+| CHAT-REC(text-davinci-002) | 0.3031  | 0.1204 |0.3692|
+| RecAlpaca | **0.3337**        | **0.1770**         |0.3708|
+
+## RecAlpaca vs Alpaca-7B
+
+### On recommendation task:
+
+In the context of the recommendation task, the input prompts encompass details about user profiles, movies that are highly preferred by the user, movies that have lower preference, candidate set generate from a classical recommendation system (lightGCN) and the outcome of the top1 recommended choice.
+
+ ![plot](./imgs/Flowchart.jpg) 
+
+ Figure above illustrates a comparsion between generation outputs from the test set using Alpaca and RecAlpaca. The difference are notable: without any fine-tuning, the Alpaca model tends to prioritize recommendations that fill the first four positions of the candidate set. This happens without accounting for the user's profile or preferences, and without providing any explanation for the recommendations.
+
+ In contrast, RecAlpaca enhances its recommendations by incorporating comprehensive movie details and explaining the reasons behind each recommendation. It achieves this by taking into consideration the user's specific details and preferences during the recommendation process.
+
+### On general query:
+
+When it comes to queries involving suggestions or recommendations, the RecAlpaca model has a tendency to offer outputs that are more comprehensible and well-structured. An example illustrating this can be seen in the figure provided below:
+
+ ![plot](./imgs/Flowchart2.jpg) 
+
 
  ## Train you own model
-Ensure the dataset is in the correct VOC format and put it into the folder PyTorch train F-RCNN and run ```python train.py``` and you need to change your own model_data/classes.txt. It would be beneficial to understand how the network architecture is written by looking at the source code I have included. The source codes are collected from [faster-rcnn-pytorch](https://github.com/bubbliiiing/faster-rcnn-pytorch) and [tensorflow-faster-rcnn](https://github.com/endernewton/tf-faster-rcnn).
-![plot](./Images/FRCNN.png)
+Ensure the dataset is in the correct Instruction-tuning format and make sure the `data_path` parameter in `alpacaLoraTrain.py` are correct, run ```python alpacaLoraTrain.py``` and if you would like to change your own model hyperpareters please refer to the `alpacaLoraTrain.py` and change respectively.
