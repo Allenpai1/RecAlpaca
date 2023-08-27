@@ -78,6 +78,8 @@ For the fine-tuning of the Alpaca-7B model, we utilize the following set of hype
  | Lora Target Modules | [q_proj, k_proj, v_proj, o_proj]  |
 
  ## RecAlpaca vs GPT3.5, LightGCN and LightFM
+ 
+In comparing our approach with other methods, we have considered classical recommendation models and the [CHAT-REC](https://arxiv.org/abs/2303.14524) model proposed by Gao et al. Our evaluation involves the RecAlpaca model with top $5$ recommendations. It is evident from the results that RecAlpaca outperforms all classical recommendation systems as well as [CHAT-REC (gpt-3.5-turbo)](https://arxiv.org/abs/2303.14524). While the NDCG score is slightly lower than that of [CHAT-REC (text-davinci-003)](https://arxiv.org/abs/2303.14524), the precision and recall metrics of RecAlpaca exhibit notable improvements, specifically a precision increase of approximately 2.994% and a recall increase of approximately 26.068%.
 
 | Models | precision@5 | recall@5 | NDCG@5 |
 |----------------|----------|-----------|-----------| 
