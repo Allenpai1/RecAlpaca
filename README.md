@@ -9,6 +9,7 @@ This repo contains:
 - The code to [`fine-tuning Alpaca-7B.`](./alpacaLoraTrain.py)
 - The code to [`evaluate Alpaca-7B.`](./evaluation_test.py)
 - The code of our [`evaluation results.`](./testEvalTop1.ipynb)
+- The code of our [`prompt reduce analysis.`](./promptAnalysis/promptAnalysis.ipynb)
 
 ## Overview
 
@@ -91,7 +92,7 @@ In comparing our approach with other methods, we have considered classical recom
 
 With this experiments, our objective was to decrease the sizes of input prompts through the random drop user-interactd items and candidate set. We conducted tests ranging from retaining only 10% of these items up to 100%. The reuslts is illustrated as below:
 
- ![plot](./imgs/eva2.png) 
+ ![plot](./imgs/promptAnalysis.png) 
 
 the figure shows that as we progressively reduce the inclusion of user-intercated item histories, we observed a corresponding decrese in the information avaliable about the user. This led to a less clear understanding of the user's preferences, subsequently exerting a notable impact on the recommendation abilities, by evaluated on top 5 NDCG, precision, and recall scores.
 
