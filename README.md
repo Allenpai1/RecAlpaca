@@ -1,7 +1,13 @@
-# Beyond GPT-3.5 in Conversational Recommendation Systems: Introducing RecAlpaca, a Fine-tuned Model based on Alpaca-7B
+# RecAlpaca: Instruction-Tuned Language Models for Conversational Recommendation
 
 <br />
 
+<div align="center">
+
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/release/python-390/)
+ [![made-with-pytorch](https://img.shields.io/badge/Made%20with-PyTorch-brightgreen)](https://pytorch.org/)
+</div>
+ 
 This is the project code which aim to build a dedicated instruction following dataset that not only facilitates the fine-tuning of a language model for explainable recommendations but also a strong recommendation capabilities.
 
 This repo contains:
@@ -118,3 +124,14 @@ When it comes to queries involving suggestions or recommendations, the RecAlpaca
 
  ## Train you own model
 Ensure the dataset is in the correct Instruction-tuning format and make sure the `data_path` parameter in `alpacaLoraTrain.py` are correct, run ```python alpacaLoraTrain.py``` and if you would like to change your own model hyperpareters please refer to the `alpacaLoraTrain.py` and change respectively.
+
+## Citation
+```
+@article{li2023recalpaca,
+title = {RecAlpaca: Instruction-Tuned Language Models for Conversational Recommendation},
+author = {Li, Haijin, Shi, Zhengxaing and Lipani, Aldo},
+journal = {to be update},
+url = {to be update},
+year = {2023},
+}
+```
