@@ -125,13 +125,3 @@ When it comes to queries involving suggestions or recommendations, the RecAlpaca
  ## Train you own model
 Ensure the dataset is in the correct Instruction-tuning format and make sure the `data_path` parameter in `alpacaLoraTrain.py` are correct, run ```python alpacaLoraTrain.py``` and if you would like to change your own model hyperpareters please refer to the `alpacaLoraTrain.py` and change respectively.
 
-## Citation
-```
-@article{li2023recalpaca,
-title = {RecAlpaca: Instruction-Tuned Language Models for Conversational Recommendation},
-author = {Li, Haijin, Shi, Zhengxaing and Lipani, Aldo},
-journal = {to be update},
-url = {to be update},
-year = {2023},
-}
-```
