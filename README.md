@@ -19,7 +19,7 @@ This repo contains:
 
 ## Overview
 
-The RecAlpaca model is a result of fine-tuning a 7B Alpaca model [1] using a dataset consisting of 13k examples of instruction recommendations. These recommendations were generated following the approach described in a research paper referred to as Self-Instruct [2]. The weights of RecAlpaca can be found in HuggingFace Hub with [model card](https://huggingface.co/Allenpai/AlpacaLoraRec).
+The RecAlpaca model is a result of fine-tuning a 7B Alpaca model [1] using a dataset consisting of 13k examples of instruction recommendations. These recommendations were generated following the approach described in a research paper referred to as Self-Instruct [2]. The weights of RecAlpaca can be found in HuggingFace Hub with model card (Anonymous Setting Update after Publication).
 
 [1]: Alpaca: Stanford Alpaca: An Instruction-following LLaMA model. Rohan Taori and Ishaan Gulrajani and Tianyi Zhang and Yann Dubois and Xuechen Li and Carlos Guestrin and Percy Liang and Tatsunori B. Hashimoto. https://github.com/tatsu-lab/stanford_alpaca
 
